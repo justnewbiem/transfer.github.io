@@ -58,8 +58,8 @@
         </select></label></div>
         <div class="col-6"><label id="lblYon">Yön<select required id="yon">
           <option value="">--</option>
-          <option>Karşılama (Geliş)</option>
-          <option>Gidiş (Havalimanına)</option>
+          <option id="arriving">Karşılama (Geliş)</option>
+          <option id="departure">Gidiş (Havalimanına)</option>
         </select></label></div>
         <div class="col-6"><label id="lblUcusSaati">Uçuş Saati<input required type="time" id="ucusSaati"></label></div>
         <div class="col-6"><label id="lblUcusNo">Uçuş Numarası<input required id="ucusNo"></label></div>
@@ -89,14 +89,36 @@
 
   // --- Çeviriler ---
   const translations = {
-    tr:{title:"Transfer Rezervasyon Formu",oda:"Oda No",isim:"İsim",soyisim:"Soyisim",tarih:"Tarih",kisi:"Kişi Sayısı",havalimani:"Havalimanı",yon:"Yön",ucusSaati:"Uçuş Saati",ucusNo:"Uçuş Numarası",not:"Not / Mesaj",btnSend:"WhatsApp’a Gönder",btnCopy:"Metni Kopyala",btnClear:"Temizle",preview:"Önizleme (WhatsApp’a gidecek metin)",warning:"‼️ Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.",note:"Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir."},
-    en:{title:"Transfer Reservation Form",oda:"Room No",isim:"First Name",soyisim:"Last Name",tarih:"Date",kisi:"Number of People",havalimani:"Airport",yon:"Direction",ucusSaati:"Flight Time",ucusNo:"Flight Number",not:"Note / Message",btnSend:"Send via WhatsApp",btnCopy:"Copy Text",btnClear:"Clear",preview:"Preview (Message to be sent via WhatsApp)",warning:"‼️ Reservation is not confirmed without payment. Payment must be made in cash at reception.",note:"Note: This page is hosted statically; form data is sent via WhatsApp."},
-    de:{title:"Transfer-Reservierungsformular",oda:"Zimmer Nr.",isim:"Vorname",soyisim:"Nachname",tarih:"Datum",kisi:"Anzahl der Personen",havalimani:"Flughafen",yon:"Richtung",ucusSaati:"Flugzeit",ucusNo:"Flugnummer",not:"Notiz / Nachricht",btnSend:"Über WhatsApp senden",btnCopy:"Text kopieren",btnClear:"Löschen",preview:"Vorschau (Nachricht für WhatsApp)",warning:"‼️ Die Reservierung wird ohne Zahlung nicht bestätigt. Zahlung nur bar an der Rezeption.",note:"Hinweis: Diese Seite ist statisch gehostet; form data is sent via WhatsApp."},
-    fr:{title:"Formulaire de réservation de transfert",oda:"N° de chambre",isim:"Prénom",soyisim:"Nom",tarih:"Date",kisi:"Nombre de personnes",havalimani:"Aéroport",yon:"Direction",ucusSaati:"Heure de vol",ucusNo:"Numéro de vol",not:"Remarque / Message",btnSend:"Envoyer via WhatsApp",btnCopy:"Copier le texte",btnClear:"Effacer",preview:"Aperçu (Message WhatsApp)",warning:"‼️ La réservation n’est pas confirmée sans paiement. Paiement en espèces à la réception.",note:"Remarque : Page statique ; données envoyées via WhatsApp."},
-    es:{title:"Formulario de Reserva de Transfer",oda:"Número de habitación",isim:"Nombre",soyisim:"Apellido",tarih:"Fecha",kisi:"Número de personas",havalimani:"Aeropuerto",yon:"Dirección",ucusSaati:"Hora del vuelo",ucusNo:"Número de vuelo",not:"Nota / Mensaje",btnSend:"Enviar por WhatsApp",btnCopy:"Copiar texto",btnClear:"Borrar",preview:"Vista previa (mensaje a enviar por WhatsApp)",warning:"‼️ La reserva no se confirma sin pago. El pago debe realizarse en efectivo en la recepción.",note:"Nota: Esta página es estática; los datos se envían via WhatsApp."},
-    it:{title:"Modulo di prenotazione del trasferimento",oda:"Numero di stanza",isim:"Nome",soyisim:"Cognome",tarih:"Data",kisi:"Numero di persone",havalimani:"Aeroporto",yon:"Direzione",ucusSaati:"Orario del volo",ucusNo:"Numero del volo",not:"Nota / Messaggio",btnSend:"Invia tramite WhatsApp",btnCopy:"Copia il testo",btnClear:"Pulisci",preview:"Anteprima (messaggio da inviare tramite WhatsApp)",warning:"‼️ La prenotazione non è confermata senza pagamento. Il pagamento deve essere effettuato in contante presso la reception.",note:"Nota: Questa pagina è statica; i dati del modulo vengono inviati tramite WhatsApp."},
-    ru:{title:"Форма бронирования трансфера",oda:"Номер комнаты",isim:"Имя",soyisim:"Фамилия",tarih:"Дата",kisi:"Число людей",havalimani:"Аэропорт",yon:"Направление",ucusSaati:"Время рейса",ucusNo:"Номер рейса",not:"Заметка / Сообщение",btnSend:"Отправить через WhatsApp",btnCopy:"Копировать текст",btnClear:"Очистить",preview:"Предварительный просмотр (сообщение, отправляемое через WhatsApp)",warning:"‼️ Бронирование не подтверждается без оплаты. Оплата должна быть произведена наличными на рецепции.",note:"Примечание: Эта страница статична, данные отправляются через WhatsApp."},
-    ar:{title:"نموذج حجز النقل",oda:"رقم الغرفة",isim:"الاسم",soyisim:"الكنية",tarih:"التاريخ",kisi:"عدد الأشخاص",havalimani:"المطار",yon:"الاتجاه",ucusSaati:"وقت الرحلة",ucusNo:"رقم الرحلة",not:"ملاحظة / رسالة",btnSend:"إرسال عبر WhatsApp",btnCopy:"نسخ النص",btnClear:"مسح",preview:"المعاينة (الرسالة التي ستُرسل عبر WhatsApp)",warning:"‼️ لا يتم تأكيد الحجز بدون الدفع. يجب دفع المبلغ نقدًا في الاستقبال.",note:"ملاحظة: يتم استضافة هذه الصفحة بشكل ثابت؛ يتم إرسال بيانات النموذج عبر WhatsApp."}
+    tr:{
+      title:"Transfer Rezervasyon Formu",
+      oda:"Oda No",isim:"İsim",soyisim:"Soyisim",tarih:"Tarih",kisi:"Kişi Sayısı",havalimani:"Havalimanı",
+      yon:"Yön",ucusSaati:"Uçuş Saati",ucusNo:"Uçuş Numarası",not:"Not / Mesaj",btnSend:"WhatsApp’a Gönder",
+      btnCopy:"Metni Kopyala",btnClear:"Temizle",preview:"Önizleme (WhatsApp’a gidecek metin)",
+      warning:"‼️ Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.",
+      note:"Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.",
+      arr:"Karşılama (Geliş)", dep:"Gidiş (Havalimanına)"
+    },
+    en:{
+      title:"Transfer Reservation Form",
+      oda:"Room No",isim:"First Name",soyisim:"Last Name",tarih:"Date",kisi:"Number of People",havalimani:"Airport",
+      yon:"Direction",ucusSaati:"Flight Time",ucusNo:"Flight Number",not:"Note / Message",btnSend:"Send via WhatsApp",
+      btnCopy:"Copy Text",btnClear:"Clear",preview:"Preview (Message to be sent via WhatsApp)",
+      warning:"‼️ Reservation is not confirmed without payment. Payment must be made in cash at reception.",
+      note:"Note: This page is hosted statically; form data is sent via WhatsApp.",
+      arr:"Arrival (Pick-up)", dep:"Departure (To Airport)"
+    },
+    de:{
+      title:"Transfer-Reservierungsformular",oda:"Zimmer Nr.",isim:"Vorname",soyisim:"Nachname",tarih:"Datum",kisi:"Anzahl der Personen",havalimani:"Flughafen",yon:"Richtung",ucusSaati:"Flugzeit",ucusNo:"Flugnummer",not:"Notiz / Nachricht",btnSend:"Über WhatsApp senden",btnCopy:"Text kopieren",btnClear:"Löschen",preview:"Vorschau (Nachricht für WhatsApp)",warning:"‼️ Die Reservierung wird ohne Zahlung nicht bestätigt. Zahlung nur bar an der Rezeption.",note:"Hinweis: Diese Seite ist statisch gehostet; form data is sent via WhatsApp."},
+    fr:{
+      title:"Formulaire de réservation de transfert",oda:"N° de chambre",isim:"Prénom",soyisim:"Nom",tarih:"Date",kisi:"Nombre de personnes",havalimani:"Aéroport",yon:"Direction",ucusSaati:"Heure de vol",ucusNo:"Numéro de vol",not:"Remarque / Message",btnSend:"Envoyer via WhatsApp",btnCopy:"Copier le texte",btnClear:"Effacer",preview:"Aperçu (Message WhatsApp)",warning:"‼️ La réservation n’est pas confirmée sans paiement. Paiement en espèces à la réception.",note:"Remarque : Page statique ; données envoyées via WhatsApp."},
+    es:{
+      title:"Formulario de Reserva de Transfer",oda:"Número de habitación",isim:"Nombre",soyisim:"Apellido",tarih:"Fecha",kisi:"Número de personas",havalimani:"Aeropuerto",yon:"Dirección",ucusSaati:"Hora del vuelo",ucusNo:"Número de vuelo",not:"Nota / Mensaje",btnSend:"Enviar por WhatsApp",btnCopy:"Copiar texto",btnClear:"Borrar",preview:"Vista previa (mensaje a enviar por WhatsApp)",warning:"‼️ La reserva no se confirma sin pago. El pago debe realizarse en efectivo en la recepción.",note:"Nota: Esta página es estática; los datos se envían via WhatsApp."},
+    it:{
+      title:"Modulo di prenotazione del trasferimento",oda:"Numero di stanza",isim:"Nome",soyisim:"Cognome",tarih:"Data",kisi:"Numero di persone",havalimani:"Aeroporto",yon:"Direzione",ucusSaati:"Orario del volo",ucusNo:"Numero del volo",not:"Nota / Messaggio",btnSend:"Invia tramite WhatsApp",btnCopy:"Copia il testo",btnClear:"Pulisci",preview:"Anteprima (messaggio da inviare tramite WhatsApp)",warning:"‼️ La prenotazione non è confermata senza pagamento. Il pagamento deve essere effettuato in contante presso la reception.",note:"Nota: Questa pagina è statica; i dati del modulo vengono inviati tramite WhatsApp."},
+    ru:{
+      title:"Форма бронирования трансфера",oda:"Номер комнаты",isim:"Имя",soyisim:"Фамилия",tarih:"Дата",kisi:"Число людей",havalimani:"Аэропорт",yon:"Направление",ucusSaati:"Время рейса",ucusNo:"Номер рейса",not:"Заметка / Сообщение",btnSend:"Отправить через WhatsApp",btnCopy:"Копировать текст",btnClear:"Очистить",preview:"Предварительный просмотр (сообщение, отправляемое через WhatsApp)",warning:"‼️ Бронирование не подтверждается без оплаты. Оплата должна быть произведена наличными на рецепции.",note:"Примечание: Эта страница статична, данные отправляются через WhatsApp."},
+    ar:{
+      title:"نموذج حجز النقل",oda:"رقم الغرفة",isim:"الاسم",soyisim:"الكنية",tarih:"التاريخ",kisi:"عدد الأشخاص",havalimani:"المطار",yon:"الاتجاه",ucusSaati:"وقت الرحلة",ucusNo:"رقم الرحلة",not:"ملاحظة / رسالة",btnSend:"إرسال عبر WhatsApp",btnCopy:"نسخ النص",btnClear:"مسح",preview:"المعاينة (الرسالة التي ستُرسل عبر WhatsApp)",warning:"‼️ لا يتم تأكيد الحجز بدون الدفع. يجب دفع المبلغ نقدًا في الاستقبال.",note:"ملاحظة: يتم استضافة هذه الصفحة بشكل ثابت؛ يتم إرسال بيانات النموذج عبر WhatsApp."}
   };
 
   // --- Dil değiştirme fonksiyonu ---
@@ -119,6 +141,8 @@
     document.getElementById("lblPreview").innerText = t.preview;
     document.getElementById("warning").innerText = t.warning;
     document.getElementById("note").innerText = t.note;
+    document.getElementById("arriving").innerText = t.arr;
+    document.getElementById("departure").innerText = t.dep;
   }
 
   // İlk açılışta tarayıcı dilini algıla
@@ -174,13 +198,4 @@
 
   function resetForm() { document.getElementById('form').reset(); renderPreview(); }
 
-  ['odaNo', 'isim', 'soyisim', 'tarih', 'kisi', 'havalimani', 'yon', 'ucusSaati', 'ucusNo', 'not'].forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener('input', renderPreview);
-    el.addEventListener('change', renderPreview);
-  });
-
-  renderPreview();
-</script>
-</body>
-</html>
+  ['odaNo', 'isim', 'soyisim', 'tarih', 'kisi', '
