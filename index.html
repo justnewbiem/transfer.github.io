@@ -86,7 +86,6 @@
 <script>
   const PHONE = "905323418266";
 
-  // Dil çevirileri
   const translations = {
     tr:{title:"Transfer Rezervasyon Formu",oda:"Oda No",isim:"İsim",soyisim:"Soyisim",tarih:"Tarih",kisi:"Kişi Sayısı",havalimani:"Havalimanı",yon:"Yön",ucusSaati:"Uçuş Saati",ucusNo:"Uçuş Numarası",not:"Not / Mesaj",btnSend:"WhatsApp’a Gönder",btnCopy:"Metni Kopyala",btnClear:"Temizle",preview:"Önizleme (WhatsApp’a gidecek metin)",warning:"‼️ Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.",note:"Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.",ph:{odaNo:"Örn: 305",isim:"Örn: Ahmet",soyisim:"Örn: Yılmaz",kisi:"Örn: 2",ucusNo:"Örn: TK1234",not:"Özel istek, bebek koltuğu, valiz sayısı vb."}},
     en:{title:"Transfer Reservation Form",oda:"Room No",isim:"First Name",soyisim:"Last Name",tarih:"Date",kisi:"Number of People",havalimani:"Airport",yon:"Direction",ucusSaati:"Flight Time",ucusNo:"Flight Number",not:"Note / Message",btnSend:"Send via WhatsApp",btnCopy:"Copy Text",btnClear:"Clear",preview:"Preview (Message to be sent via WhatsApp)",warning:"‼️ Reservation is not confirmed without payment. Payment must be made in cash at reception.",note:"Note: This page is hosted statically; form data is sent via WhatsApp.",ph:{odaNo:"e.g. 305",isim:"e.g. John",soyisim:"e.g. Smith",kisi:"e.g. 2",ucusNo:"e.g. TK1234",not:"Special request, baby seat, luggage etc."}},
@@ -118,7 +117,6 @@
     document.getElementById("warning").innerText = t.warning;
     document.getElementById("note").innerText = t.note;
 
-    // placeholder
     odaNo.placeholder = t.ph.odaNo;
     isim.placeholder = t.ph.isim;
     soyisim.placeholder = t.ph.soyisim;
@@ -126,12 +124,10 @@
     ucusNo.placeholder = t.ph.ucusNo;
     not.placeholder = t.ph.not;
 
-    // RTL kontrol
     document.body.dir = (lang==="ar")?"rtl":"ltr";
     document.getElementById("lang").value = lang;
   }
 
-  // tarayıcı dil algılama
   const browserLang = (navigator.language || "en").substring(0,2);
   const supported = ["tr","en","de","fr","es","it","ru","ar"];
   setLang(supported.includes(browserLang)?browserLang:"en");
@@ -140,26 +136,4 @@
   function fmt(v){return (v||'').toString().trim()}
   function buildMessage(){
     return [
-      "🚌 TRANSFER",
-      "Oda: "+fmt(odaNo.value),
-      "İsim: "+fmt(isim.value)+" "+fmt(soyisim.value),
-      "Tarih: "+fmt(tarih.value),
-      "Kişi: "+fmt(kisi.value),
-      "Havalimanı: "+fmt(havalimani.value),
-      "Yön: "+fmt(yon.value),
-      "Saat: "+fmt(ucusSaati.value),
-      "Uçuş: "+fmt(ucusNo.value),
-      not.value?("Not: "+fmt(not.value)):""
-    ].filter(Boolean).join("\n");
-  }
-  function renderPreview(){preview.value=buildMessage();}
-  function handleSubmit(e){e.preventDefault();window.location.href=`https://wa.me/${PHONE}?text=${encodeURIComponent(buildMessage())}`;}
-  function copyPreview(){navigator.clipboard.writeText(buildMessage());}
-  function resetForm(){form.reset();renderPreview();}
-  ["odaNo","isim","soyisim","tarih","kisi","havalimani","yon","ucusSaati","ucusNo","not"].forEach(id=>{
-    document.getElementById(id).addEventListener("input",renderPreview);
-  });
-  renderPreview();
-</script>
-</body>
-</html>
+      "🚌
