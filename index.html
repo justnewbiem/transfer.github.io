@@ -176,18 +176,4 @@
       `Havalimanı: ${data.havalimani}`,
       `Yön: ${data.yon}`,
       `Uçuş Saati: ${data.ucusSaati}`,
-      `Uçuş No: ${data.ucusNo}`,
-      data.not ? `Not: ${data.not}` : null,
-      "",
-      "‼️ Ödeme yapılmadan rezervasyon onaylanmaz.",
-      "Ödeme resepsiyona nakit olarak yapılmalıdır."
-    ].filter(Boolean);
-    return lines.join("\n");
-  }
-
-  function renderPreview() { document.getElementById('preview').value = buildMessage(); }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const msg = buildMessage();
-    const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)
+      `Uçuş No: ${data
