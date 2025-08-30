@@ -27,37 +27,93 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <!-- Dil seçici -->
-      <div style="text-align:right; margin-bottom:10px;">
-        <label for="lang">🌐 Dil / Language:</label>
-        <select id="lang" onchange="setLang(this.value)">
-          <option value="tr">🇹🇷 Türkçe</option>
-          <option value="en">🇬🇧 English</option>
-          <option value="de">🇩🇪 Deutsch</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="it">🇮🇹 Italiano</option>
-          <option value="ru">🇷🇺 Русский</option>
-          <option value="ar">🇸🇦 العربية</option>
-        </select>
-      </div>
-
-      <h1 id="formTitle">Transfer Rezervasyon Formu</h1>
+      <h1>Transfer Rezervasyon Formu</h1>
       <form id="form" class="grid" onsubmit="handleSubmit(event)">
-        <div class="col-3"><label id="lblOda">Oda No<input required id="odaNo" placeholder="Örn: 305"></label></div>
-        <div class="col-4"><label id="lblIsim">İsim<input required id="isim" placeholder="Örn: Ahmet"></label></div>
-        <div class="col-5"><label id="lblSoyisim">Soyisim<input required id="soyisim" placeholder="Örn: Yılmaz"></label></div>
-        <div class="col-6"><label id="lblTarih">Tarih<input required type="date" id="tarih"></label></div>
-        <div class="col-6"><label id="lblKisi">Kişi Sayısı<input required type="number" min="1" id="kisi" placeholder="Örn: 2"></label></div>
-        <div class="col-6"><label id="lblHavalimani">Havalimanı<select required id="havalimani">
+        <div class="col-3"><label>Oda No<input required id="odaNo" placeholder="Örn: 305"></label></div>
+        <div class="col-4"><label>İsim<input required id="isim" placeholder="Örn: Ahmet"></label></div>
+        <div class="col-5"><label>Soyisim<input required id="soyisim" placeholder="Örn: Yılmaz"></label></div>
+        <div class="col-6"><label>Tarih<input required type="date" id="tarih"></label></div>
+        <div class="col-6"><label>Kişi Sayısı<input required type="number" min="1" id="kisi" placeholder="Örn: 2"></label></div>
+        <div class="col-6"><label>Havalimanı<select required id="havalimani">
           <option value="">Seçiniz</option>
           <option>IST (İstanbul Havalimanı)</option>
           <option>SAW (Sabiha Gökçen)</option>
         </select></label></div>
-        <div class="col-6"><label id="lblYon">Yön<select required id="yon">
+        <div class="col-6"><label>Yön<select required id="yon">
           <option value="">Seçiniz</option>
           <option>Karşılama (Geliş)</option>
           <option>Gidiş (Havalimanına)</option>
         </select></label></div>
-        <div class="col-6"><label id="lblUcusSaati">Uçuş Saati<input required type="time" id="ucusSaati"></label></div>
-        <div class="col-6"><label id="lblUcusNo">Uçuş Numarası<input required id="ucusNo" placeholder="Örn: TK123
+        <div class="col-6"><label>Uçuş Saati<input required type="time" id="ucusSaati"></label></div>
+        <div class="col-6"><label>Uçuş Numarası<input required id="ucusNo" placeholder="Örn: TK1234"></label></div>
+        <div class="col-12"><label>Not / Mesaj<textarea id="not" placeholder="Özel istek, bebek koltuğu, valiz sayısı vb."></textarea></label></div>
+        <div class="col-12 actions">
+          <button class="btn primary" type="submit">WhatsApp’a Gönder</button>
+          <button class="btn ghost" type="button" onclick="copyPreview()">Metni Kopyala</button>
+          <button class="btn ok" type="button" onclick="resetForm()">Temizle</button>
+        </div>
+      </form>
+      <div class="grid" style="margin-top:18px">
+        <div class="col-12">
+          <label>Önizleme (WhatsApp’a gidecek metin)</label>
+          <textarea id="preview" readonly style="width:100%;background:#0b1222;border:1px solid #1f2937;color:#e5e7eb;padding:12px;border-radius:12px;min-height:120px"></textarea>
+        </div>
+      </div>
+      <p style="margin-top:18px;color:#f87171;font-weight:bold;">
+        ‼️ Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.
+      </p>
+      <small>Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.</small>
+    </div>
+  </div>
+
+<script>
+  const PHONE = "905323418266";
+  function fmt(v){return (v||'').toString().trim()}
+  function buildMessage(){
+    const data = {
+      odaNo: fmt(document.getElementById('odaNo').value),
+      isim: fmt(document.getElementById('isim').value),
+      soyisim: fmt(document.getElementById('soyisim').value),
+      tarih: fmt(document.getElementById('tarih').value),
+      kisi: fmt(document.getElementById('kisi').value),
+      havalimani: fmt(document.getElementById('havalimani').value),
+      yon: fmt(document.getElementById('yon').value),
+      ucusSaati: fmt(document.getElementById('ucusSaati').value),
+      ucusNo: fmt(document.getElementById('ucusNo').value),
+      not: fmt(document.getElementById('not').value)
+    };
+    const lines = [
+      "🚌 TRANSFER REZERVASYON",
+      `Oda No: ${data.odaNo}`,
+      `İsim Soyisim: ${data.isim} ${data.soyisim}`,
+      `Tarih: ${data.tarih}`,
+      `Kişi Sayısı: ${data.kisi}`,
+      `Havalimanı: ${data.havalimani}`,
+      `Yön: ${data.yon}`,
+      `Uçuş Saati: ${data.ucusSaati}`,
+      `Uçuş No: ${data.ucusNo}`,
+      data.not ? `Not: ${data.not}` : null,
+      "",
+      "‼️ Ödeme yapılmadan rezervasyon onaylanmaz.",
+      "Ödeme resepsiyona nakit olarak yapılmalıdır."
+    ].filter(Boolean);
+    return lines.join("\n");
+  }
+  function renderPreview(){ document.getElementById('preview').value = buildMessage(); }
+  function handleSubmit(e){
+    e.preventDefault();
+    const msg = buildMessage();
+    const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+    window.location.href = url;
+    // Fallback for environments blocking wa.me
+    setTimeout(()=>{ window.location.href='success.html'; }, 1200);
+  }
+  function copyPreview(){ navigator.clipboard.writeText(buildMessage()); }
+  function resetForm(){ document.getElementById('form').reset(); renderPreview(); }
+  ['odaNo','isim','soyisim','tarih','kisi','havalimani','yon','ucusSaati','ucusNo','not'].forEach(id=>{
+    const el=document.getElementById(id); el.addEventListener('input',renderPreview); el.addEventListener('change',renderPreview);
+  });
+  renderPreview();
+</script>
+</body>
+</html>
