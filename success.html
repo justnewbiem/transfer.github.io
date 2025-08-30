@@ -1,0 +1,11 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>WhatsApp’a yönlendiriliyor…</title>
+<style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center}</style>
+<h3>WhatsApp’a yönlendiriliyor…</h3>
+<p>Eğer WhatsApp otomatik açılmadıysa, <a id="link" href="#">buraya tıklayın</a>.</p>
+<script>
+  const msg = sessionStorage.getItem("last_msg") || "";
+  const url = "https://wa.me/905351068012?text=" + encodeURIComponent(msg || "Merhaba, transfer rezervasyonu yapmak istiyorum.");
+  document.getElementById('link').href = url;
+</script>
