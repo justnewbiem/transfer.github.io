@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transfer Rezervasyon Formu</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22d3ee; --ok:#22c55e; }
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b0f1a,#0f172a);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;color:var(--text)}
+  .wrap{max-width:940px;margin:32px auto;padding:24px}
+  .card{background:radial-gradient(1200px 400px at -20% -20%,#1f2937 0%,#111827 45%,#0b1020 100%);border:1px solid #1f2937;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.45);padding:24px}
+  h1{margin:.2em 0 1em;font-weight:800;letter-spacing:.2px;font-size:clamp(24px,4vw,34px);}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+  .col-6{grid-column:span 6} .col-12{grid-column:span 12} .col-4{grid-column:span 4} .col-5{grid-column:span 5} .col-3{grid-column:span 3}
+  label{display:block;font-size:13px;color:var(--muted);margin:6px 0 6px}
+  input,select,textarea{width:100%;background:#0b1222;border:1px solid #1f2937;color:var(--text);padding:12px 12px;border-radius:12px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+  textarea{min-height:96px;resize:vertical}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+  .btn{appearance:none;border:none;border-radius:14px;padding:12px 16px;font-weight:700;letter-spacing:.3px;cursor:pointer}
+  .primary{background:linear-gradient(135deg,#06b6d4,#22d3ee);color:#001014}
+  .ghost{background:transparent;border:1px solid #334155;color:var(--text)}
+  .ok{background:linear-gradient(135deg,#16a34a,#22c55e);color:#02120a}
+  small{color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Transfer Rezervasyon Formu</h1>
+      <form id="form" class="grid" onsubmit="handleSubmit(event)">
+        <div class="col-3"><label>Oda No<input required id="odaNo" placeholder="Örn: 305"></label></div>
+        <div class="col-4"><label>İsim<input required id="isim" placeholder="Örn: Ahmet"></label></div>
+        <div class="col-5"><label>Soyisim<input required id="soyisim" placeholder="Örn: Yılmaz"></label></div>
+        <div class="col-6"><label>Tarih<input required type="date" id="tarih"></label></div>
+        <div class="col-6"><label>Kişi Sayısı<input required type="number" min="1" id="kisi" placeholder="Örn: 2"></label></div>
+        <div class="col-6"><label>Havalimanı<select required id="havalimani">
+          <option value="">Seçiniz</option>
+          <option>IST (İstanbul Havalimanı)</option>
+          <option>SAW (Sabiha Gökçen)</option>
+        </select></label></div>
+        <div class="col-6"><label>Yön<select required id="yon">
+          <option value="">Seçiniz</option>
+          <option>Karşılama (Geliş)</option>
+          <option>Gidiş (Havalimanına)</option>
+        </select></label></div>
+        <div class="col-6"><label>Uçuş Saati<input required type="time" id="ucusSaati"></label></div>
+        <div class="col-6"><label>Uçuş Numarası<input required id="ucusNo" placeholder="Örn: TK1234"></label></div>
+        <div class="col-12"><label>Not / Mesaj<textarea id="not" placeholder="Özel istek, bebek koltuğu, valiz sayısı vb."></textarea></label></div>
+        <div class="col-12 actions">
+          <button class="btn primary" type="submit">WhatsApp’a Gönder</button>
+          <button class="btn ghost" type="button" onclick="copyPreview()">Metni Kopyala</button>
+          <button class="btn ok" type="button" onclick="resetForm()">Temizle</button>
+        </div>
+      </form>
+      <div class="grid" style="margin-top:18px">
+        <div class="col-12">
+          <label>Önizleme (WhatsApp’a gidecek metin)</label>
+          <textarea id="preview" readonly style="width:100%;background:#0b1222;border:1px solid #1f2937;color:#e5e7eb;padding:12px;border-radius:12px;min-height:120px"></textarea>
+        </div>
+      </div>
+      <p style="margin-top:18px;color:#f87171;font-weight:bold;">
+        ‼️ Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.
+      </p>
+      <small>Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.</small>
+    </div>
+  </div>
+
+<script>
+  const PHONE = "905351068012";
+  function fmt(v){return (v||'').toString().trim()}
+  function buildMessage(){
+    const data = {
+      odaNo: fmt(document.getElementById('odaNo').value),
+      isim: fmt(document.getElementById('isim').value),
+      soyisim: fmt(document.getElementById('soyisim').value),
+      tarih: fmt(document.getElementById('tarih').value),
+      kisi: fmt(document.getElementById('kisi').value),
+      havalimani: fmt(document.getElementById('havalimani').value),
+      yon: fmt(document.getElementById('yon').value),
+      ucusSaati: fmt(document.getElementById('ucusSaati').value),
+      ucusNo: fmt(document.getElementById('ucusNo').value),
+      not: fmt(document.getElementById('not').value)
+    };
+    const lines = [
+      "🚌 TRANSFER REZERVASYON",
+      `Oda No: ${data.odaNo}`,
+      `İsim Soyisim: ${data.isim} ${data.soyisim}`,
+      `Tarih: ${data.tarih}`,
+      `Kişi Sayısı: ${data.kisi}`,
+      `Havalimanı: ${data.havalimani}`,
+      `Yön: ${data.yon}`,
+      `Uçuş Saati: ${data.ucusSaati}`,
+      `Uçuş No: ${data.ucusNo}`,
+      data.not ? `Not: ${data.not}` : null,
+      "",
+      "‼️ Ödeme yapılmadan rezervasyon onaylanmaz.",
+      "Ödeme resepsiyona nakit olarak yapılmalıdır."
+    ].filter(Boolean);
+    return lines.join("\n");
+  }
+  function renderPreview(){ document.getElementById('preview').value = buildMessage(); }
+  function handleSubmit(e){
+    e.preventDefault();
+    const msg = buildMessage();
+    const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+    window.location.href = url;
+    // Fallback for environments blocking wa.me
+    setTimeout(()=>{ window.location.href='success.html'; }, 1200);
+  }
+  function copyPreview(){ navigator.clipboard.writeText(buildMessage()); }
+  function resetForm(){ document.getElementById('form').reset(); renderPreview(); }
+  ['odaNo','isim','soyisim','tarih','kisi','havalimani','yon','ucusSaati','ucusNo','not'].forEach(id=>{
+    const el=document.getElementById(id); el.addEventListener('input',renderPreview); el.addEventListener('change',renderPreview);
+  });
+  renderPreview();
+</script>
+</body>
+</html>
