@@ -188,7 +188,7 @@
       btnSend: "Enviar por WhatsApp",
       btnCopy: "Copiar texto",
       btnClear: "Borrar",
-      preview: "Vista previa (mensaje a enviar por WhatsApp)",
+      preview: "Vista previalsx: "Vista previa (mensaje a enviar por WhatsApp)",
       warning: "!? La reserva no se confirma sin pago. El pago debe realizarse en efectivo en la recepción.",
       note: "Nota: Esta página es estática; los datos se envían vía WhatsApp.",
       yonOptions: { arrival: "Llegada (Recogida)", departure: "Salida (Hacia el aeropuerto)" },
@@ -340,18 +340,57 @@
     return lines.join("\n");
   }
 
-  function renderPreview() { document.getElementById('preview').value = buildMessage(); }
+  function buildTurkishMessage() {
+    const t = translations.tr; // Her zaman Türkçe şablon kullanılır
+    const data = {
+      odaNo: fmt(document.getElementById('odaNo').value),
+      isim: fmt(document.getElementById('isim').value),
+      soyisim: fmt(document.getElementById('soyisim').value),
+      tarih: fmt(document.getElementById('tarih').value),
+      kisi: fmt(document.getElementById('kisi').value),
+      havalimani: fmt(document.getElementById('havalimani').value),
+      yon: fmt(document.getElementById('yon').value),
+      ucusSaati: fmt(document.getElementById('ucusSaati').value),
+      ucusNo: fmt(document.getElementById('ucusNo').value),
+      not: fmt(document.getElementById('not').value)
+    };
+    const lines = [
+      `${t.title.toUpperCase()}`,
+      `${t.oda}: ${data.odaNo}`,
+      `${t.isim} ${t.soyisim}: ${data.isim} ${data.soyisim}`,
+      `${t.tarih}: ${data.tarih}`,
+      `${t.kisi}: ${data.kisi}`,
+      `${t.havalimani}: ${data.havalimani}`,
+      `${t.yon}: ${data.yon ? t.yonOptions[data.yon] : ''}`,
+      `${t.ucusSaati}: ${data.ucusSaati}`,
+      `${t.ucusNo}: ${data.ucusNo}`,
+      data.not ? `${t.not}: ${data.not}` : null,
+      "",
+      t.warning,
+      t.note
+    ].filter(Boolean);
+    return lines.join("\n");
+  }
+
+  function renderPreview() { 
+    document.getElementById('preview').value = buildMessage(); 
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const msg = buildMessage();
+    const msg = buildTurkishMessage();
     const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
     window.location.href = url;
   }
 
-  function copyPreview() { navigator.clipboard.writeText(buildMessage()); }
+  function copyPreview() { 
+    navigator.clipboard.writeText(buildTurkishMessage()); 
+  }
 
-  function resetForm() { document.getElementById('form').reset(); renderPreview(); }
+  function resetForm() { 
+    document.getElementById('form').reset(); 
+    renderPreview(); 
+  }
 
   ['odaNo', 'isim', 'soyisim', 'tarih', 'kisi', 'havalimani', 'yon', 'ucusSaati', 'ucusNo', 'not'].forEach(id => {
     const el = document.getElementById(id);
