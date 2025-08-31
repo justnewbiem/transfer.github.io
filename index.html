@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="tr">
 <head>
@@ -79,14 +78,14 @@
         </div>
       </div>
       <p id="warning" style="margin-top:18px;color:#f87171;font-weight:bold;">
-        Not: Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.
+        !? Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.
       </p>
       <small id="note">Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.</small>
     </div>
   </div>
 
 <script>
-  const PHONE = "905351068012";
+  const PHONE = "905323418266";
 
   // --- Çeviriler ---
   const translations = {
@@ -106,7 +105,7 @@
       btnCopy: "Metni Kopyala",
       btnClear: "Temizle",
       preview: "Önizleme (WhatsApp’a gidecek metin)",
-      warning: "Not: Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.",
+      warning: "!? Ödeme yapılmadan rezervasyon onaylanmaz. Ödeme resepsiyona nakit olarak yapılmalıdır.",
       note: "Not: Bu sayfa statik olarak barındırılır; form verileri WhatsApp ile gönderilir.",
       yonOptions: { arrival: "Karşılama (Geliş)", departure: "Gidiş (Havalimanına)" },
       lang: "Türkçe"
@@ -127,8 +126,8 @@
       btnCopy: "Copy Text",
       btnClear: "Clear",
       preview: "Preview (Message to be sent via WhatsApp)",
-      warning: "Note: Reservation is not confirmed without payment. Payment must be made in cash at reception.",
-      Note: "Note: This page is hosted statically; form data is sent via WhatsApp.",
+      warning: "!? Reservation is not confirmed without payment. Payment must be made in cash at reception.",
+      note: "Note: This page is hosted statically; form data is sent via WhatsApp.",
       yonOptions: { arrival: "Arrival (Pick-up)", departure: "Departure (To Airport)" },
       lang: "English"
     },
@@ -148,7 +147,7 @@
       btnCopy: "Text kopieren",
       btnClear: "Löschen",
       preview: "Vorschau (Nachricht für WhatsApp)",
-      warning: "Hinweis: Die Reservierung wird ohne Zahlung nicht bestätigt. Zahlung nur bar an der Rezeption.",
+      warning: "!? Die Reservierung wird ohne Zahlung nicht bestätigt. Zahlung nur bar an der Rezeption.",
       note: "Hinweis: Diese Seite ist statisch gehostet; Formulardaten werden über WhatsApp gesendet.",
       yonOptions: { arrival: "Ankunft (Abholung)", departure: "Abfahrt (zum Flughafen)" },
       lang: "Deutsch"
@@ -169,7 +168,7 @@
       btnCopy: "Copier le texte",
       btnClear: "Effacer",
       preview: "Aperçu (Message WhatsApp)",
-      warning: "Remarque : La réservation n’est pas confirmée sans paiement. Paiement en espèces à la réception.",
+      warning: "!? La réservation n’est pas confirmée sans paiement. Paiement en espèces à la réception.",
       note: "Remarque : Page statique ; données envoyées via WhatsApp.",
       yonOptions: { arrival: "Arrivée (Accueil)", departure: "Départ (Vers l’aéroport)" },
       lang: "Français"
@@ -190,7 +189,7 @@
       btnCopy: "Copiar texto",
       btnClear: "Borrar",
       preview: "Vista previa (mensaje a enviar por WhatsApp)",
-      warning: "Nota: La reserva no se confirma sin pago. El pago debe realizarse en efectivo en la recepción.",
+      warning: "!? La reserva no se confirma sin pago. El pago debe realizarse en efectivo en la recepción.",
       note: "Nota: Esta página es estática; los datos se envían vía WhatsApp.",
       yonOptions: { arrival: "Llegada (Recogida)", departure: "Salida (Hacia el aeropuerto)" },
       lang: "Español"
@@ -211,7 +210,7 @@
       btnCopy: "Copia il testo",
       btnClear: "Pulisci",
       preview: "Anteprima (messaggio da inviare tramite WhatsApp)",
-      warning: "Nota: La prenotazione non è confermata senza pagamento. Il pagamento deve essere effettuato in contante presso la reception.",
+      warning: "!? La prenotazione non è confermata senza pagamento. Il pagamento deve essere effettuato in contante presso la reception.",
       note: "Nota: Questa pagina è statica; i dati del modulo vengono inviati tramite WhatsApp.",
       yonOptions: { arrival: "Arrivo (Accoglienza)", departure: "Partenza (Verso l’aeroporto)" },
       lang: "Italiano"
@@ -232,7 +231,7 @@
       btnCopy: "Копировать текст",
       btnClear: "Очистить",
       preview: "Предпросмотр (Сообщение для WhatsApp)",
-      warning: "Примечание: Бронирование не подтверждается без оплаты. Оплата должна быть произведена наличными на ресепшене.",
+      warning: "!? Бронирование не подтверждается без оплаты. Оплата должна быть произведена наличными на ресепшене.",
       note: "Примечание: Эта страница статична; данные формы отправляются через WhatsApp.",
       yonOptions: { arrival: "Прибытие (Встреча)", departure: "Отправление (В аэропорт)" },
       lang: "Русский"
@@ -305,6 +304,26 @@
   setLang(supported.includes(browserLang) ? browserLang : "en");
   document.getElementById("lang").value = supported.includes(browserLang) ? browserLang : "en";
 
+  // --- MyMemory API ile çeviri fonksiyonu (anahtar gerekmez) ---
+  async function translateToTurkish(text, sourceLang) {
+    if (!text) return text;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|tr`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.responseStatus === 200) {
+        return data.responseData.translatedText;
+      } else {
+        console.error('Çeviri hatası:', data.responseDetails);
+        return text; // Hata durumunda orijinal metni döndür
+      }
+    } catch (error) {
+      console.error('Çeviri hatası:', error);
+      return text; // Hata durumunda orijinal metni döndür
+    }
+  }
+
   // --- Form işlemleri ---
   function fmt(v) { return (v || '').toString().trim(); }
 
@@ -341,18 +360,66 @@
     return lines.join("\n");
   }
 
-  function renderPreview() { document.getElementById('preview').value = buildMessage(); }
+  async function buildTranslatedMessage() {
+    const lang = document.getElementById("lang").value;
+    if (lang === 'tr') {
+      return buildMessage(); // Türkçe seçiliyse çeviriye gerek yok
+    }
 
-  function handleSubmit(e) {
+    // Kullanıcı verilerini topla ve çevir
+    const data = {
+      odaNo: fmt(document.getElementById('odaNo').value),
+      isim: await translateToTurkish(fmt(document.getElementById('isim').value), lang),
+      soyisim: await translateToTurkish(fmt(document.getElementById('soyisim').value), lang),
+      tarih: fmt(document.getElementById('tarih').value), // Tarih çevrilmez
+      kisi: fmt(document.getElementById('kisi').value), // Sayı çevrilmez
+      havalimani: await translateToTurkish(fmt(document.getElementById('havalimani').value), lang),
+      yon: await translateToTurkish(fmt(document.getElementById('yon').value === 'arrival' ? translations[lang].yonOptions.arrival : translations[lang].yonOptions.departure), lang),
+      ucusSaati: fmt(document.getElementById('ucusSaati').value), // Saat çevrilmez
+      ucusNo: fmt(document.getElementById('ucusNo').value), // Uçuş no çevrilmez
+      not: await translateToTurkish(fmt(document.getElementById('not').value), lang)
+    };
+
+    // Türkçe şablon kullanarak mesajı oluştur
+    const t = translations.tr;
+    const lines = [
+      `${t.title.toUpperCase()}`,
+      `${t.oda}: ${data.odaNo}`,
+      `${t.isim} ${t.soyisim}: ${data.isim} ${data.soyisim}`,
+      `${t.tarih}: ${data.tarih}`,
+      `${t.kisi}: ${data.kisi}`,
+      `${t.havalimani}: ${data.havalimani}`,
+      `${t.yon}: ${data.yon}`,
+      `${t.ucusSaati}: ${data.ucusSaati}`,
+      `${t.ucusNo}: ${data.ucusNo}`,
+      data.not ? `${t.not}: ${data.not}` : null,
+      "",
+      t.warning,
+      t.note
+    ].filter(Boolean);
+    return lines.join("\n");
+  }
+
+  function renderPreview() { 
+    document.getElementById('preview').value = buildMessage(); 
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    const msg = buildMessage();
+    const msg = await buildTranslatedMessage();
     const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
     window.location.href = url;
   }
 
-  function copyPreview() { navigator.clipboard.writeText(buildMessage()); }
+  async function copyPreview() { 
+    const msg = await buildTranslatedMessage();
+    navigator.clipboard.writeText(msg); 
+  }
 
-  function resetForm() { document.getElementById('form').reset(); renderPreview(); }
+  function resetForm() { 
+    document.getElementById('form').reset(); 
+    renderPreview(); 
+  }
 
   ['odaNo', 'isim', 'soyisim', 'tarih', 'kisi', 'havalimani', 'yon', 'ucusSaati', 'ucusNo', 'not'].forEach(id => {
     const el = document.getElementById(id);
